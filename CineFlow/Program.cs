@@ -76,6 +76,16 @@ namespace CineFlow
             builder.Services.AddScoped<IMovieService, MovieService>();
             builder.Services.AddScoped<IBookingService, BookingService>();
 
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[] { "en", "ar-EG" };
+                options.SetDefaultCulture(supportedCultures[0]);
+                options.AddSupportedCultures(supportedCultures);
+                options.AddSupportedUICultures(supportedCultures);
+            });
+
             // MVC with Filters
             //builder.Services.AddMvc(options =>
             //{
@@ -147,6 +157,9 @@ namespace CineFlow
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+
+            var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>().Value;
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseSession();
             app.UseAuthentication();

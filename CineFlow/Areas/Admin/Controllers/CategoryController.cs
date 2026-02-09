@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
-
-namespace CineFlow.Areas.Admin.Controllers
+﻿namespace CineFlow.Areas.Admin.Controllers
 {
     [Area(SD.ADMIN_AREA)]
     public class CategoryController : Controller
     {
         private readonly ILogger<CategoryController> _logger;
         private readonly IMovieCategoryService _service;
+        private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
         private const int PageSize = 10;
 
         public CategoryController(ILogger<CategoryController> logger,
@@ -60,6 +58,8 @@ namespace CineFlow.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 await _service.AddAsync(category);
+                TempData["ToastMessage"] = _sharedLocalizer["CreateCategorySuccess"].Value ?? "FALLBACK_TEXT";
+                TempData["ToastType"] = "success";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -86,6 +86,8 @@ namespace CineFlow.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 await _service.UpdateAsync(id, category);
+                TempData["ToastMessage"] = _sharedLocalizer["UpdateCategorySuccess"].Value ?? "FALLBACK_TEXT";
+                TempData["ToastType"] = "success";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -93,12 +95,12 @@ namespace CineFlow.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var category = await _service.GetByIdAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-            return View(category);
+            var category = await _service.GetByIdNoTrackingAsync(id);
+            if (category == null) return NotFound();
+            await _service.DeleteAsync(id);
+            TempData["ToastMessage"] = _sharedLocalizer["DeleteCategorySuccess"].Value ?? "FALLBACK_TEXT";
+            TempData["ToastType"] = "success";
+            return RedirectToAction(nameof(Index));
         }
     }
 }

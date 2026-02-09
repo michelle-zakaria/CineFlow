@@ -7,7 +7,8 @@ global using System.ComponentModel.DataAnnotations;
 global using System.ComponentModel.DataAnnotations.Schema;
 global using System.Collections.Generic;
 global using System.Reflection;
-//global using System.Linq.Dynamic.Core;
+global using System.Reflection;
+global using System.Globalization;
 
 // ASP.NET Core namespaces
 global using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,11 @@ global using Microsoft.EntityFrameworkCore.ChangeTracking;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Localization;
+global using Microsoft.Extensions.Options;
+global using Microsoft.AspNetCore.Localization;
+global using Microsoft.AspNetCore.Mvc.Localization;
+global using Microsoft.AspNetCore.Mvc.Razor;
 
 // Application namespaces
 global using CineFlow;
